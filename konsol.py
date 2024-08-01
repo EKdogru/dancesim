@@ -49,7 +49,7 @@ dugme5.pack()
 dugme7 = Button(text="Kasık",fg="white",bg="black",font=("Times",15,"bold"),command=lambda:send_custom_command('Kasik'))
 dugme7.pack()
 
-dugme9 = Button(text="Challange", fg="white",bg="purple", font=("Times",15,"bold"),command=lambda:send_custom_command('Challange'))
+dugme9 = Button(text="Challange", fg="white",bg="purple", font=("Times",15,"bold"),command=lambda:send_custom_command('Challenge'))
 dugme9.pack()
 
 dugme4 = Button(text="Stop", fg="white", bg="red", font=("Times", 20, "bold"), command=pencere.quit)
