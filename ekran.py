@@ -68,7 +68,7 @@ def draw_kashik(x, y, open = False, angle_degrees = 0, color = (255, 0, 0)):
 
 # Çöp adamı tanımlayan sınıf
 class StickFigure:
-    def __init__(self, x, y, control_keys):
+    def __init__(self, x, y, color, control_keys):
         self.x = x
         self.y = y
         self.vel_x = 5
@@ -77,88 +77,89 @@ class StickFigure:
         self.jump_count = 10
         self.dance_mode = None
         self.dance_step = 0
+        self.color = color
         self.control_keys = control_keys
 
     def draw(self, screen):
         # Baş
-        pygame.draw.circle(screen, (0, 0, 0), (self.x, self.y - 20), 10)
+        pygame.draw.circle(screen, self.color, (self.x, self.y - 20), 10)
         # Gövde
-        pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x, self.y + 30), 2)
+        pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x, self.y + 30), 2)
 
         kashik_data = ()
         # Kollar
         if self.dance_mode == 'gangnam': #ok
             if self.dance_step % 40 < 10:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 10, self.y - 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 10, self.y - 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 10, self.y - 40), (self.x - 30, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 10, self.y - 40), (self.x + 30, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 10, self.y - 40), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 10, self.y - 40), 2)
+                pygame.draw.line(screen, self.color, (self.x - 10, self.y - 40), (self.x - 30, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x + 10, self.y - 40), (self.x + 30, self.y - 20), 2)
                 kashik_data = (self.x - 30, self.y - 20, self.x + 30, self.y - 20, True)
             elif self.dance_step % 40 < 20:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 20, self.y - 20), (self.x - 40, self.y), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x - 20, self.y - 20), (self.x - 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
                 kashik_data = (self.x - 40, self.y, self.x + 40, self.y, False)
             elif self.dance_step % 40 < 30:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 10, self.y - 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y - 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 10, self.y - 40), (self.x - 30, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y - 40), (self.x + 40, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 10, self.y - 40), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y - 40), 2)
+                pygame.draw.line(screen, self.color, (self.x - 10, self.y - 40), (self.x - 30, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y - 40), (self.x + 40, self.y - 20), 2)
                 kashik_data = (self.x - 30, self.y - 20, self.x + 40, self.y - 20, True)
             else:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 20, self.y - 20), (self.x - 40, self.y), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x - 20, self.y - 20), (self.x - 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
                 kashik_data = (self.x - 40, self.y, self.x + 40, self.y, False)
         elif self.dance_mode == 'ankara':#ok
             if self.dance_step % 40 < 10:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 20, self.y - 20), (self.x - 40, self.y), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x - 20, self.y - 20), (self.x - 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
                 kashik_data = (self.x - 40, self.y, self.x + 40, self.y, True)
             elif self.dance_step % 40 < 20:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 40, self.y - 10), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 40, self.y - 10), (self.x - 60, self.y + 10), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 40, self.y - 10), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y - 20), 2)
+                pygame.draw.line(screen, self.color, (self.x - 40, self.y - 10), (self.x - 60, self.y + 10), 2)
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y - 20), (self.x + 40, self.y), 2)
                 kashik_data = (self.x - 60, self.y + 10, self.x + 40, self.y, False)
             elif self.dance_step % 40 < 30:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y - 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y + 20), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 20, self.y - 40), (self.x - 40, self.y - 20), 2) 
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y + 20), (self.x + 40, self.y + 40), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y - 40), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y + 20), 2)
+                pygame.draw.line(screen, self.color, (self.x - 20, self.y - 40), (self.x - 40, self.y - 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y + 20), (self.x + 40, self.y + 40), 2) 
                 kashik_data = (self.x - 40, self.y - 20, self.x + 40, self.y + 40, True)
             else:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y + 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y + 40), 2)
-                pygame.draw.line(screen, (0, 0, 0), (self.x - 20, self.y + 40), (self.x - 40, self.y + 60), 2) 
-                pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y + 40), (self.x + 40, self.y + 60), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y + 40), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y + 40), 2)
+                pygame.draw.line(screen, self.color, (self.x - 20, self.y + 40), (self.x - 40, self.y + 60), 2) 
+                pygame.draw.line(screen, self.color, (self.x + 20, self.y + 40), (self.x + 40, self.y + 60), 2) 
                 kashik_data = (self.x - 40, self.y + 60, self.x + 40, self.y + 60, False)
         elif self.dance_mode == 'floss':#ok
             if self.dance_step % 40 < 10:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y + 20), 2) 
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y + 20), 2) 
                 kashik_data = (self.x - 20, self.y + 20, self.x + 20, self.y + 20, True)
             elif self.dance_step % 40 < 20:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 40, self.y + 20), 2) 
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 40, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 40, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 40, self.y + 20), 2) 
                 kashik_data = (self.x - 40, self.y + 20, self.x + 40, self.y + 20, False)
             elif self.dance_step % 40 < 30:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 60, self.y + 20), 2) 
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 60, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 60, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 60, self.y + 20), 2) 
                 kashik_data = (self.x - 60, self.y + 20, self.x + 60, self.y + 20, True)
             else:
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 80, self.y + 20), 2) 
-                pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 80, self.y + 20), 2)
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 80, self.y + 20), 2) 
+                pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 80, self.y + 20), 2)
                 kashik_data = (self.x - 80, self.y + 20, self.x + 80, self.y + 20, False)
         else:
-            pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x - 20, self.y), 2)
-            pygame.draw.line(screen, (0, 0, 0), (self.x, self.y - 10), (self.x + 20, self.y), 2)
-            pygame.draw.line(screen, (0, 0, 0), (self.x - 20, self.y), (self.x - 40, self.y + 20), 2) 
-            pygame.draw.line(screen, (0, 0, 0), (self.x + 20, self.y), (self.x + 40, self.y + 20), 2)
+            pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x - 20, self.y), 2)
+            pygame.draw.line(screen, self.color, (self.x, self.y - 10), (self.x + 20, self.y), 2)
+            pygame.draw.line(screen, self.color, (self.x - 20, self.y), (self.x - 40, self.y + 20), 2) 
+            pygame.draw.line(screen, self.color, (self.x + 20, self.y), (self.x + 40, self.y + 20), 2)
             kashik_data = (self.x - 40, self.y + 20, self.x + 40, self.y + 20, True)
 
         if kashik:
@@ -167,8 +168,8 @@ class StickFigure:
 
         kashik_data = ()
         # Bacaklar
-        pygame.draw.line(screen, (0, 0, 0), (self.x, self.y + 30), (self.x - 10, self.y + 50), 2)
-        pygame.draw.line(screen, (0, 0, 0), (self.x, self.y + 30), (self.x + 10, self.y + 50), 2)
+        pygame.draw.line(screen, self.color, (self.x, self.y + 30), (self.x - 10, self.y + 50), 2)
+        pygame.draw.line(screen, self.color, (self.x, self.y + 30), (self.x + 10, self.y + 50), 2)
         if self.dance_mode:
             self.dance_step += 1 * 30 / MAX_FPS
 
@@ -184,7 +185,7 @@ class StickFigure:
 
 # Çöp adam listesi
 stick_figures = [ #ok
-    StickFigure(50, 50, {
+    StickFigure(50, 50, (0,0,0), {
         'right': pygame.K_RIGHT,
         'left': pygame.K_LEFT,
         'up': pygame.K_UP,
@@ -199,10 +200,11 @@ stick_figures = [ #ok
 # Yeni çöp adam oluşturma fonksiyonu
 def create_stick_figure(): #ok
     if not stick_figures:
-        stick_figures.append(StickFigure(50, 50, {'right': pygame.K_RIGHT,'left': pygame.K_LEFT, 'up': pygame.K_UP, 'down': pygame.K_DOWN, 'jump': pygame.K_UP,'dance1': pygame.K_1,'dance2': pygame.K_2,'stop_dance': pygame.K_3}))
+        stick_figures.append(StickFigure(50, 50, (0,0,0), {'right': pygame.K_RIGHT,'left': pygame.K_LEFT, 'up': pygame.K_UP, 'down': pygame.K_DOWN, 'jump': pygame.K_UP,'dance1': pygame.K_1,'dance2': pygame.K_2,'stop_dance': pygame.K_3}))
         return
 
     positions = [(750, 50), (50, 550), (750, 550)]
+    colors = [(0, 255, 255), (0, 255, 0), (0, 0, 255)]
     control_keys = [
         {'right': pygame.K_d, 'left': pygame.K_a, 'jump': pygame.K_w, 'up': pygame.K_w, 'down': pygame.K_s,'dance1': pygame.K_q, 'dance2': pygame.K_e,
          'stop_dance': pygame.K_r},
@@ -215,7 +217,8 @@ def create_stick_figure(): #ok
     if len(stick_figures) < 4: #ok
         new_position = positions[len(stick_figures) - 1]
         new_keys = control_keys[len(stick_figures) - 1]
-        stick_figures.append(StickFigure(*new_position, new_keys))
+        new_color = colors[len(stick_figures) - 1]
+        stick_figures.append(StickFigure(*new_position, new_color, new_keys))
 
 # UDP dinleme ve çöp adam oluşturma fonksiyonu
 def udp_listener():
