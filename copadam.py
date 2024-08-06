@@ -67,6 +67,58 @@ def draw_stick_figure(screen, x, y, left_upper_arm_angle, left_lower_arm_angle, 
     pygame.draw.line(screen, black, (right_hip_x, right_hip_y), (right_knee_x, right_knee_y), 2)  # Üst bacak
     pygame.draw.line(screen, black, (right_knee_x, right_knee_y), (right_foot_x, right_foot_y), 2)  # Alt bacak
 
+def reset_stick_figure():
+    global left_upper_arm_angle, x, y, left_lower_arm_angle, right_upper_arm_angle,right_lower_arm_angle,left_upper_leg_angle ,left_lower_leg_angle ,right_upper_leg_angle  ,right_lower_leg_angle  ,angle_increment,arm_length,leg_length
+
+    x, y = width // 2, height // 2
+    left_upper_arm_angle = 0
+    left_lower_arm_angle = 0
+    right_upper_arm_angle = 0
+    right_lower_arm_angle = 0
+    left_upper_leg_angle = -75  # Sol üst bacak açısı
+    left_lower_leg_angle = -75  # Sol alt bacak açısı
+    right_upper_leg_angle = 75  # Sağ üst bacak açısı
+    right_lower_leg_angle = 75  # Sağ alt bacak açısı
+    angle_increment = 15
+    arm_length = 50
+    leg_length = 50
+
+def handle_key_events(event):
+    global left_upper_arm_angle, x, y, left_lower_arm_angle, right_upper_arm_angle,right_lower_arm_angle,left_upper_leg_angle ,left_lower_leg_angle ,right_upper_leg_angle  ,right_lower_leg_angle  ,angle_increment,arm_length,leg_length
+
+    if event.key == pygame.K_w:
+        left_upper_arm_angle = min(left_upper_arm_angle + angle_increment, 90)
+    elif event.key == pygame.K_s:
+        left_upper_arm_angle = max(left_upper_arm_angle - angle_increment, -90)
+    elif event.key == pygame.K_d:
+        left_lower_arm_angle = min(left_lower_arm_angle + angle_increment, 90)
+    elif event.key == pygame.K_a:
+        left_lower_arm_angle = max(left_lower_arm_angle - angle_increment, -90)
+    elif event.key == pygame.K_k:
+        right_upper_arm_angle = min(right_upper_arm_angle + angle_increment, 90)
+    elif event.key == pygame.K_i:
+        right_upper_arm_angle = max(right_upper_arm_angle - angle_increment, -90)
+    elif event.key == pygame.K_l:
+        right_lower_arm_angle = min(right_lower_arm_angle + angle_increment, 90)
+    elif event.key == pygame.K_j:
+        right_lower_arm_angle = max(right_lower_arm_angle - angle_increment, -90)
+    elif event.key == pygame.K_UP:
+        left_upper_leg_angle = min(left_upper_leg_angle + angle_increment, 90)
+    elif event.key == pygame.K_DOWN:
+        left_upper_leg_angle = max(left_upper_leg_angle - angle_increment, -90)
+    elif event.key == pygame.K_LEFT:
+        left_lower_leg_angle = min(left_lower_leg_angle + angle_increment, 90)
+    elif event.key == pygame.K_RIGHT:
+        left_lower_leg_angle = max(left_lower_leg_angle - angle_increment, -90)
+    elif event.key == pygame.K_KP2:
+        right_upper_leg_angle = min(right_upper_leg_angle + angle_increment, 90)
+    elif event.key == pygame.K_KP8:
+        right_upper_leg_angle = max(right_upper_leg_angle - angle_increment, -90)
+    elif event.key == pygame.K_KP4:
+        right_lower_leg_angle = min(right_lower_leg_angle + angle_increment, 90)
+    elif event.key == pygame.K_KP6:
+        right_lower_leg_angle = max(right_lower_leg_angle - angle_increment, -90)
+
 def draw_rotated_line(screen, color, start_pos, end_pos, width, angle):
     """Draw a rotated line on the screen."""
     # Unpack start and end positions

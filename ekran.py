@@ -2,14 +2,15 @@ import pygame
 import sys
 import socket
 import threading
-from copadam import *
+import copadam as freemode
 import babaaba as chal
 
 # Pygame'i başlat
 pygame.init()
 
 # Ekran boyutları
-screen = pygame.display.set_mode((800, 600))
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 # UDP bağlantısı için ayarlar
@@ -28,7 +29,9 @@ kashik = False
 # Yeniden Başlat Butonu
 button_font = pygame.font.Font(None, 36)
 button_text = button_font.render("Yeniden Başlat", True, chal.BLACK)
-button_rect = button_text.get_rect(center=(width // 2, height // 2 - 75))
+button_rect = button_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 75))
+start_text = button_font.render("Başla", True, chal.BLACK)
+start_rect = start_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 75))
 
 def getmixerargs():
     pygame.mixer.init()
@@ -58,12 +61,12 @@ initMixer()
 
 def draw_kashik(x, y, open = False, angle_degrees = 0, color = (255, 0, 0)):
     if open:
-        circle_pos = draw_rotated_line(screen, color, (0 + x, 0 + y), (10 + x, 10 + y), 2, angle_degrees)
+        circle_pos = freemode.draw_rotated_line(screen, color, (0 + x, 0 + y), (10 + x, 10 + y), 2, angle_degrees)
         pygame.draw.circle(screen, color, circle_pos, 3)
-        circle_pos = draw_rotated_line(screen, color, (10 + x, 0 + y), (0 + x, 10 + y), 2, angle_degrees)
+        circle_pos = freemode.draw_rotated_line(screen, color, (10 + x, 0 + y), (0 + x, 10 + y), 2, angle_degrees)
         pygame.draw.circle(screen, color, circle_pos, 3)
     else:
-        circle_pos = draw_rotated_line(screen, color, (5 + x, 0 + y), (5 + x, 12 + y), 2, angle_degrees)
+        circle_pos = freemode.draw_rotated_line(screen, color, (5 + x, 0 + y), (5 + x, 12 + y), 2, angle_degrees)
         pygame.draw.circle(screen, color, (circle_pos[0] + 1, circle_pos[1]), 3)
 
 # Çöp adamı tanımlayan sınıf
@@ -176,11 +179,11 @@ class StickFigure:
     def handle_keys(self, keys):
         if keys[self.control_keys['left']] and self.x > 0:
             self.x -= self.vel_x
-        if keys[self.control_keys['right']] and self.x < width:
+        if keys[self.control_keys['right']] and self.x < WIDTH:
             self.x += self.vel_x
         if keys[self.control_keys['up']] and self.y > 0:
             self.y -= self.vel_x
-        if keys[self.control_keys['down']] and self.y < height:
+        if keys[self.control_keys['down']] and self.y < HEIGHT:
             self.y += self.vel_x
 
 # Çöp adam listesi
@@ -227,9 +230,9 @@ def udp_listener():
     while True:
         data, addr = sock.recvfrom(1024)
         message = data.decode('utf-8')
-        if message == 'YeniKarekter': #ok
+        if message == 'YeniKarekter' and not challenge_mode and not free_mode: #ok
             create_stick_figure()
-        elif message.startswith('DansModu'): #ok
+        elif message.startswith('DansModu') and not challenge_mode and not free_mode: #ok
             _, dance_mode = message.split()
             for stick_figure in stick_figures:
                 stick_figure.dance_mode = dance_mode
@@ -247,52 +250,43 @@ def udp_listener():
                 kasik_sound.play(-1)
 
         elif message.startswith('FreeMode'):
+            for stick_figure in stick_figures:
+                stick_figure.dance_mode = None
+                stick_figure.dance_step = 0
+            challenge_mode = False
             free_mode = not free_mode
-            try:
-                pygame.mixer.stop()
-                if free_mode:
-                    freemode_song.play(-1)
-                else:
-                    freemode_song.stop()
-            except:
-                print("error playing sound")
+            pygame.mixer.stop()
+            if free_mode:
+                freemode_song.play(-1)
+            else:
+                freemode_song.stop()
         elif message == 'Reset': #ok
             stick_figures.clear()
             pygame.mixer.stop()
             free_mode = False
             kashik = False
-            global left_upper_arm_angle, x, y, left_lower_arm_angle, right_upper_arm_angle,right_lower_arm_angle,left_upper_leg_angle ,left_lower_leg_angle ,right_upper_leg_angle  ,right_lower_leg_angle  ,angle_increment,arm_length,leg_length
-
-            x, y = width // 2, height // 2
-            left_upper_arm_angle = 0
-            left_lower_arm_angle = 0
-            right_upper_arm_angle = 0
-            right_lower_arm_angle = 0
-            left_upper_leg_angle = -75  # Sol üst bacak açısı
-            left_lower_leg_angle = -75  # Sol alt bacak açısı
-            right_upper_leg_angle = 75  # Sağ üst bacak açısı
-            right_lower_leg_angle = 75  # Sağ alt bacak açısı
-            angle_increment = 15
-            arm_length = 50
-            leg_length = 50
-        elif message == 'Kasik':
+            challenge_mode = False
+            freemode.reset_stick_figure()
+        elif message == 'Kasik' and not challenge_mode: 
             kashik = not kashik
-            try:
-                if kashik:
-                    kasik_sound.play(-1)
-                else:
-                    kasik_sound.stop()
-            except:
-                print("error playing sound")
+            if kashik and stick_figures[0].dance_mode:
+                kasik_sound.play(-1)
+            else:
+                kasik_sound.stop()
         elif message == 'Challenge':
+            for stick_figure in stick_figures:
+                stick_figure.dance_mode = None
+                stick_figure.dance_step = 0
+            free_mode = False
             challenge_mode = not challenge_mode
             pygame.mixer.stop()
             chal.restart_game()
-            if challenge_mode and not chal.game_over:
-                challenge_song.play(-1)
+            chal.game_over = True
+            if challenge_mode:
+                chal.start = False
         elif message == 'Stop':
-            pygame.quit()
-            sys.exit()
+            global running
+            running = False
 
 # UDP dinleme işlevini ayrı bir iş parçacığında çalıştırma
 threading.Thread(target=udp_listener, daemon=True).start()
@@ -307,7 +301,7 @@ while running:
 
     if not chal.game_over and challenge_mode:
         chal.bar.height += chal.speed * dt
-        if chal.bar.height > height:
+        if chal.bar.height > HEIGHT:
             chal.game_over = True
             pygame.mixer.stop()
 
@@ -316,47 +310,18 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and chal.game_over and challenge_mode:
             if button_rect.collidepoint(event.pos):
+                chal.start = True
                 chal.restart_game()
                 pygame.mixer.stop()
                 challenge_song.play(-1)
         elif event.type == pygame.KEYDOWN:
             if free_mode and not challenge_mode:
-                if event.key == pygame.K_w:
-                    left_upper_arm_angle = min(left_upper_arm_angle + angle_increment, 90)
-                elif event.key == pygame.K_s:
-                    left_upper_arm_angle = max(left_upper_arm_angle - angle_increment, -90)
-                elif event.key == pygame.K_d:
-                    left_lower_arm_angle = min(left_lower_arm_angle + angle_increment, 90)
-                elif event.key == pygame.K_a:
-                    left_lower_arm_angle = max(left_lower_arm_angle - angle_increment, -90)
-                elif event.key == pygame.K_k:
-                    right_upper_arm_angle = min(right_upper_arm_angle + angle_increment, 90)
-                elif event.key == pygame.K_i:
-                    right_upper_arm_angle = max(right_upper_arm_angle - angle_increment, -90)
-                elif event.key == pygame.K_l:
-                    right_lower_arm_angle = min(right_lower_arm_angle + angle_increment, 90)
-                elif event.key == pygame.K_j:
-                    right_lower_arm_angle = max(right_lower_arm_angle - angle_increment, -90)
-                elif event.key == pygame.K_UP:
-                    left_upper_leg_angle = min(left_upper_leg_angle + angle_increment, 90)
-                elif event.key == pygame.K_DOWN:
-                    left_upper_leg_angle = max(left_upper_leg_angle - angle_increment, -90)
-                elif event.key == pygame.K_LEFT:
-                    left_lower_leg_angle = min(left_lower_leg_angle + angle_increment, 90)
-                elif event.key == pygame.K_RIGHT:
-                    left_lower_leg_angle = max(left_lower_leg_angle - angle_increment, -90)
-                elif event.key == pygame.K_KP2:
-                    right_upper_leg_angle = min(right_upper_leg_angle + angle_increment, 90)
-                elif event.key == pygame.K_KP8:
-                    right_upper_leg_angle = max(right_upper_leg_angle - angle_increment, -90)
-                elif event.key == pygame.K_KP4:
-                    right_lower_leg_angle = min(right_lower_leg_angle + angle_increment, 90)
-                elif event.key == pygame.K_KP6:
-                    right_lower_leg_angle = max(right_lower_leg_angle - angle_increment, -90)
+                freemode.handle_key_events(event)
             elif challenge_mode:
                 chal.handle_key_events(event)
                 if event.key == pygame.K_SPACE:
-                    if chal.game_over:
+                    if chal.game_over or not chal.start:
+                        chal.start = True
                         chal.restart_game()
                         pygame.mixer.stop()
                         challenge_song.play(-1)
@@ -369,22 +334,24 @@ while running:
     screen.fill((255, 255, 255))
 
     if challenge_mode:
-        chal.draw_stickman(screen, (width // 2, height // 2), chal.prev_direction)
-        if chal.game_over:
+        chal.draw_stickman(screen, (WIDTH // 2, HEIGHT // 2), chal.prev_direction)
+        if not chal.start:
+            screen.blit(start_text, start_rect)
+            chal.draw_arrow(screen, (WIDTH // 2, 100), chal.current_direction, chal.BLACK)
+        elif chal.game_over:
             screen.blit(button_text, button_rect)
-            chal.draw_arrow(screen, (width // 2, 100), chal.current_direction, chal.RED)
+            chal.draw_arrow(screen, (WIDTH // 2, 100), chal.current_direction, chal.RED)
         else:
-            chal.draw_arrow(screen, (width // 2, 100), chal.current_direction)
+            chal.draw_arrow(screen, (WIDTH // 2, 100), chal.current_direction)
 
         chal.draw_score(screen, chal.score)
         pygame.draw.rect(screen, chal.RED, chal.bar)
+    elif free_mode:
+        freemode.draw_stick_figure(screen, freemode.x, freemode.y, freemode.left_upper_arm_angle, freemode.left_lower_arm_angle, freemode.right_upper_arm_angle, freemode.right_lower_arm_angle, freemode.left_upper_leg_angle, freemode.left_lower_leg_angle, freemode.right_upper_leg_angle, freemode.right_lower_leg_angle)
     else:
         for stick_figure in stick_figures:
             stick_figure.draw(screen)
-
-        if free_mode:
-            draw_stick_figure(screen, x, y, left_upper_arm_angle, left_lower_arm_angle, right_upper_arm_angle, right_lower_arm_angle, left_upper_leg_angle, left_lower_leg_angle, right_upper_leg_angle, right_lower_leg_angle)
-    
+        
     pygame.display.flip()
     clock.tick(MAX_FPS)               
 

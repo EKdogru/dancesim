@@ -15,6 +15,10 @@ def send_custom_command(command):
     message = command.encode()
     sock.sendto(message, (UDP_IP, UDP_PORT))
 
+def close_game():
+    pencere.quit()
+    send_dance_command('Stop')
+
 pencere = Tk()
 pencere.geometry("600x600+500+100")
 
@@ -52,7 +56,7 @@ dugme7.pack()
 dugme9 = Button(text="Challange", fg="white",bg="purple", font=("Times",15,"bold"),command=lambda:send_custom_command('Challenge'))
 dugme9.pack()
 
-dugme4 = Button(text="Stop", fg="white", bg="red", font=("Times", 20, "bold"), command=pencere.quit)
+dugme4 = Button(text="Stop", fg="white", bg="red", font=("Times", 20, "bold"), command=close_game)
 dugme4.pack()
 
 
