@@ -11,6 +11,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
 # Oyun değişkenleri
+start = False
 bar = pygame.rect.Rect(0, 0, 10, 0)
 initial_speed = 500
 max_speed = 1500
@@ -19,7 +20,7 @@ arrow_directions = ["up", "down", "left", "right"]
 current_direction = random.choice(arrow_directions)
 prev_direction = None
 score = 0
-game_over = False
+game_over = True
 
 # Çöp Adam Çizimi
 def draw_stickman(surface, position, direction):
@@ -59,7 +60,6 @@ def draw_stickman(surface, position, direction):
     pygame.draw.line(surface, BLACK, (x, y + head_radius + body_length),
                      (x + arm_length, y + head_radius + body_length + leg_length), 2)
 
-
 # Ok Çizimi
 def draw_arrow(surface, position, direction, color=BLACK):
     x, y = position
@@ -74,13 +74,11 @@ def draw_arrow(surface, position, direction, color=BLACK):
     elif direction == "right":
         pygame.draw.polygon(surface, color, [(x + size, y), (x, y - size / 2), (x, y + size / 2)])
 
-
 # Puan Yazdırma
 def draw_score(surface, score):
     font = pygame.font.SysFont(None, 36)
     score_surface = font.render(f"Score: {score}", True, BLACK)
     surface.blit(score_surface, (WIDTH - 150, 20))
-
 
 # Yeniden Başlatma
 def restart_game():
@@ -91,6 +89,7 @@ def restart_game():
     prev_direction = None
     score = 0
     game_over = False
+
 
 def handle_key_events(event):
     global current_direction, game_over, score, bar, prev_direction, current_direction, speed
